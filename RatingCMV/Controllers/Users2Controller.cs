@@ -9,22 +9,26 @@ using CommunicationAppApi.Models;
 
 namespace CommunicationAppApi.Controllers
 {
-    public class UsersController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class Users2Controller : Controller
     {
         private readonly RatingsContext _context;
 
-        public UsersController(RatingsContext context)
+        public Users2Controller(RatingsContext context)
         {
             _context = context;
         }
 
         // GET: Users
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            return Json(await _context.Users.ToListAsync());
         }
 
         // GET: Users/Details/5
+        [HttpGet("{id}")]
         public async Task<IActionResult> Details(string? id)
         {
             if (id == null || _context.Users == null)
@@ -39,7 +43,7 @@ namespace CommunicationAppApi.Controllers
                 return NotFound();
             }
 
-            return View(user);
+            return Json(user);
         }
 
         //// GET: Users/Create
@@ -60,9 +64,9 @@ namespace CommunicationAppApi.Controllers
             {
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Created(string.Format("/api/Users/{0}",user.id),user);
             }
-            return View(user);
+            return BadRequest();
         }
 
         //// GET: Users/Edit/5

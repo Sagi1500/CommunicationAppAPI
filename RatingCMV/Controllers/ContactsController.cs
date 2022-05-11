@@ -11,9 +11,9 @@ namespace CommunicationAppApi.Controllers
 {
     public class ContactsController : Controller
     {
-        private readonly UsersContext _context;
+        private readonly RatingsContext _context;
 
-        public ContactsController(UsersContext context)
+        public ContactsController(RatingsContext context)
         {
             _context = context;
         }
