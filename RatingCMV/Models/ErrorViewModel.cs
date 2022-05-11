@@ -1,4 +1,4 @@
-namespace CommunicationAppAPI.Models
+namespace CommunicationAppApi.Models
 {
     public class ErrorViewModel
     {

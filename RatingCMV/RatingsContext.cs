@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using CommunicationAppAPI.Models;
+using CommunicationAppApi.Models;
 
-namespace CommunicationAppAPI
+namespace CommunicationAppApi
 {
     public class RatingsContext : DbContext
     {

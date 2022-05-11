@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using CommunicationAppAPI;
+using CommunicationAppApi;
 
 #nullable disable
 
-namespace CommunicationAppAPI.Migrations
+namespace CommunicationAppApi.Migrations
 {
     [DbContext(typeof(RatingsContext))]
     [Migration("20220508095710_InitRatingsDB")]
@@ -21,7 +21,7 @@ namespace CommunicationAppAPI.Migrations
                 .HasAnnotation("ProductVersion", "6.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("CommunicationAppAPI.Models.Rating", b =>
+            modelBuilder.Entity("CommunicationAppApi.Models.Rating", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

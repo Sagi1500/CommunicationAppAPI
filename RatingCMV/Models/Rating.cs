@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CommunicationAppAPI.Models
+namespace CommunicationAppApi.Models
 {
     public class Rating
     {

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CommunicationAppAPI.Migrations
+namespace CommunicationAppApi.Migrations
 {
     public partial class InitRatingsDB : Migration
     {

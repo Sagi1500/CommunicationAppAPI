@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using CommunicationAppAPI.Models;
+using CommunicationAppApi.Models;
 using System.Diagnostics;
 
-namespace CommunicationAppAPI.Controllers
+namespace CommunicationAppApi.Controllers
 {
     public class HomeController : Controller
     {
