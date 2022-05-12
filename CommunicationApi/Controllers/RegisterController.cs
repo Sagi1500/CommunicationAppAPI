@@ -18,17 +18,16 @@ namespace CommunicationApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post (string username,string password)
+        public IActionResult Post (string id,string password)
         {
-
-            if (username == "a1" && password == "a1")
+            if (id=="a1"&&password=="a1")
             {
                 var claims = new[]
                 {
                     new Claim(JwtRegisteredClaimNames.Sub,_configuration["JWTParams:Subject"]),
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()),
-                    new Claim("UserId",username)
+                    new Claim("UserId",id)
                 };
                 var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTParams:SecretKey"]));
                 var mac = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);

@@ -4,7 +4,7 @@
     console.log(d);
 }
 async function get() {
-    const r = await fetch('/api/Users2/1');
+    const r = await fetch('/api/Users2/a');
     const d = await r.json();
     console.log(d);
 }
@@ -14,7 +14,7 @@ async function post() {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ id: username, password: password })
+        body: JSON.stringify({ id: 'a1', password: 'a1'})
     });
     console.log(r);
 }

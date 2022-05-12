@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using CommunicationAppApi.Models;
+﻿using CommunicationAppApi.Models;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace CommunicationAppApi
 {
-    public class RatingsContext : DbContext
+    public class UsersContext : DbContext
     {
-        private const string connectionString = "server=localhost;port=3306;database=Ratings;user=root;password=SagiShoval";
+        private const string connectionString = "server=localhost;port=3306;database=Users;user=root;password=SagiShoval";
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -16,15 +17,15 @@ namespace CommunicationAppApi
         {
             // Configuring the Name property as the primary
             // key of the Items table
-            modelBuilder.Entity<Rating>().HasKey(e => e.Id);
+            modelBuilder.Entity<User>().HasKey(e => e.id);
         }
 
-        public DbSet<Rating>? Ratings { get; set; }
-        public DbSet<Contact>? Contacts { get; set; }
+        //public DbSet<Rating>? Ratings { get; set; }
+        //public DbSet<Contact>? Contacts { get; set; }
+
         public DbSet<User>? Users { get; set; }
 
 
 
     }
 }
-

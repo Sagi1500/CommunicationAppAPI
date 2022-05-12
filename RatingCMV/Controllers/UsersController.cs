@@ -64,6 +64,10 @@ namespace CommunicationAppApi.Controllers
             }
             return View(user);
         }
+        public async Task<IActionResult> Ajax()
+        {
+            return View(await _context.Users.ToListAsync());
+        }
 
         //// GET: Users/Edit/5
         //[HttpGet("{id}")]
