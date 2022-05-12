@@ -1,10 +1,14 @@
-
+﻿
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using CommunicationApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<UsersContext>();
 // Add services to the container.
 
 builder.Services.AddControllers();

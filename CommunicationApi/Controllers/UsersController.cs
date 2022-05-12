@@ -1,7 +1,10 @@
-﻿using CommunicationApi.Controllers;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using System;
 using Microsoft.EntityFrameworkCore;
-
 
 namespace CommunicationApi.Controllers
 {
@@ -9,71 +12,22 @@ namespace CommunicationApi.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-
-        private readonly UsersContext _context;
-
-        public UsersController(UsersContext context)
+        public readonly UsersContext _entities;
+        public UsersController(UsersContext config)
         {
-            _context = context;
-        }
-
-
-        // GET: Users
-        [HttpGet]
-        public async Task<IEnumerable<Users>> Index()
-        {
-            return await _context.Users.ToListAsync();
-        }
-
-        // GET: Users/Details/5
-        [HttpGet("{id}")]
-        public async Task<IEnumerable<Users>> Details(string? id)
-        {
-            return await _context.Users.Where(x => x.id == id).ToListAsync();
+            _entities = config;
         }
 
         [HttpPost]
-        public async void Create([Bind("id,password")] Users user)
+        public async Task<List<Users>> Post(string id, string password)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            Users user = new Users();
+            user.id = id;
+            user.password = password;
+            _entities.Users.Add(user);
+            await _entities.SaveChangesAsync();
+                 return await _entities.Users.ToListAsync();
+           
         }
     }
 }
-
-//using CommunicationApi.Controllers;
-//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.EntityFrameworkCore;
-
-
-//namespace CommunicationApi.Controllers
-//{
-//    [ApiController]
-//    [Route("api/[controller]")]
-//    public class UsersController : ControllerBase
-//    {
-
-//        public static List<Users> usersList = new List<Users>();
-
-
-//        // GET: Users
-//        [HttpGet]
-//        public IEnumerable<Users> Index()
-//        {
-//            return usersList;
-//        }
-
-//        // GET: Users/Details/5
-//        [HttpGet("{id}")]
-//        public Users Details(string? id)
-//        {
-//            return usersList.Where(x => x.id == id).FirstOrDefault();
-//        }
-
-//        [HttpPost]
-//        public async void Create([Bind("id,password")] Users user)
-//        {
-//            usersList.Add(user);
-//        }
-//    }
-//}

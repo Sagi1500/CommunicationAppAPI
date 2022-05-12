@@ -34,9 +34,11 @@ namespace CommunicationAppApi.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("server")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("id");
@@ -78,6 +80,7 @@ namespace CommunicationAppApi.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("password")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("id");
