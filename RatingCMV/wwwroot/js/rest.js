@@ -1,5 +1,5 @@
 ﻿async function getAll() {
-    const r = await fetch('/api/Contacts');
+    const r = await fetch('/api/Registers');
     const d = await r.json();
     console.log(d);
 }
@@ -9,12 +9,12 @@ async function get() {
     console.log(d);
 }
 async function post() {
-    const r = await fetch('/api/Contacts', {
+    const r = await fetch('/api/Registers', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: 'a1', name: 'a1', server:'a1'})
+        body: JSON.stringify({ id: 'a1', password: 'a1'})
     });
     console.log(r);
 }

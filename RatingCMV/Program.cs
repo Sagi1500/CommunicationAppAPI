@@ -10,17 +10,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<RegistersContext>(options =>
-//using CommunicationAppApi.Hubs;
-
-    options.UseSqlServer(builder.Configuration.GetConnectionString("RegistersContext") ?? throw new InvalidOperationException("Connection string 'RegistersContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 //builder.Services.AddSignalR();
 builder.Services.AddDbContext<RatingsContext>();
 builder.Services.AddDbContext<ContactsContext>();
-
+builder.Services.AddDbContext<RegistersContext>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -59,7 +55,6 @@ builder.Services.AddCors(options =>
     app.UseRouting();
     app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Registers}/{action=Index}/{id?}");
+        pattern: "{controller=Ratings}/{action=Ajax}/{id?}");
 
     app.Run();
-

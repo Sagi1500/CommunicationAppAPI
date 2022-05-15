@@ -2,18 +2,16 @@
 using CommunicationAppApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
 namespace CommunicationAppApi.Migrations
 {
-    [DbContext(typeof(ContactsContext))]
-    [Migration("20220515160711_MyMigration")]
-    partial class MyMigration
+    [DbContext(typeof(RegistersContext))]
+    partial class RegistersContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,6 +21,9 @@ namespace CommunicationAppApi.Migrations
             modelBuilder.Entity("Domain.Contacts", b =>
                 {
                     b.Property<string>("id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Registersid")
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("last")
@@ -41,7 +42,35 @@ namespace CommunicationAppApi.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("Registersid");
+
                     b.ToTable("Contacts");
+                });
+
+            modelBuilder.Entity("Domain.Registers", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("password")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Registers");
+                });
+
+            modelBuilder.Entity("Domain.Contacts", b =>
+                {
+                    b.HasOne("Domain.Registers", null)
+                        .WithMany("contactsList")
+                        .HasForeignKey("Registersid");
+                });
+
+            modelBuilder.Entity("Domain.Registers", b =>
+                {
+                    b.Navigation("contactsList");
                 });
 #pragma warning restore 612, 618
         }

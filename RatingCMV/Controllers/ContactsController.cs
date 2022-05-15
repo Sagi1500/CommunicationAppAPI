@@ -1,11 +1,114 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Threading.Tasks;
+//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.AspNetCore.Mvc.Rendering;
+//using Microsoft.EntityFrameworkCore;
+//using CommunicationAppApi;
+//using Domain;
+
+//namespace CommunicationAppApi.Controllers
+//{
+//    [ApiController]
+//    [Route("api/[controller]")]
+//    public class ContactsController : Controller
+//    {
+//        private readonly ContactsContext _context;
+
+//        public ContactsController(ContactsContext context)
+//        {
+//            _context = context;
+//        }
+
+//        // GET: Contacts
+//        [HttpGet]
+//        public async Task<IActionResult> Index()
+//        {
+//              return Json(await _context.Contacts.ToListAsync());
+//        }
+
+//        // GET: Contacts/Details/5
+
+//        [HttpGet("{id}")]
+//        public async Task<IActionResult> Details(string id)
+//        {
+//            if (id == null || _context.Contacts == null)
+//            {
+//                return NotFound();
+//            }
+
+//            var contacts = await _context.Contacts
+//                .FirstOrDefaultAsync(m => m.id == id);
+//            if (contacts == null)
+//            {
+//                return NotFound();
+//            }
+
+//            return Json(contacts);
+//        }
+
+
+
+//        // POST: Contacts/Create
+//        // To protect from overposting attacks, enable the specific properties you want to bind to.
+//        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+//        [HttpPost]
+
+//        public async Task<IActionResult> Create([Bind("id,name,server")] Contacts contacts)
+//        {
+//            if (ModelState.IsValid)
+//            { 
+//                _context.Add(contacts);
+//                await _context.SaveChangesAsync();
+//                return Created("/api/Contacts/"+contacts.id,contacts);
+
+//            }
+//            return BadRequest();        
+//        }
+
+
+
+
+//        // PUT: Contacts/Edit/5
+//        [HttpPut]
+
+//        public async Task<IActionResult> Edit([Bind("id,name,server")] Contacts contacts)
+//        {
+//            if (ModelState.IsValid)
+//            {
+//                _context.Update(contacts);
+//                await _context.SaveChangesAsync();
+//                return NoContent();
+
+//            }
+//            return BadRequest();
+//        }
+
+
+//        // DELETE: Contacts/Delete/5
+//        [HttpDelete("{id}")]
+//        public async Task<IActionResult> Delete(string id)
+//        {
+//            var contacts = await _context.Contacts.FindAsync(id);
+//            _context.Contacts.Remove(contacts);
+//            await _context.SaveChangesAsync();
+//            return NoContent();
+//        }
+
+
+
+
+
+//        private bool ContactsExists(string id)
+//        {
+//            return (_context.Contacts?.Any(e => e.id == id)).GetValueOrDefault();
+//        }
+
+//    }
+//}
+
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using CommunicationAppApi;
 using Domain;
 
 namespace CommunicationAppApi.Controllers
@@ -14,18 +117,18 @@ namespace CommunicationAppApi.Controllers
     [Route("api/[controller]")]
     public class ContactsController : Controller
     {
-        private readonly ContactsContext _context;
+        private readonly List<Contacts> _contactsList;
 
-        public ContactsController(ContactsContext context)
+        public ContactsController(RegistersContext context)
         {
-            _context = context;
+            _contactsList = context.Registers.Find("a1").contactsList;
         }
 
         // GET: Contacts
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-              return Json(await _context.Contacts.ToListAsync());
+            return Json(_contactsList);
         }
 
         // GET: Contacts/Details/5
@@ -33,13 +136,12 @@ namespace CommunicationAppApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null || _context.Contacts == null)
+            if (id == null || _contactsList == null)
             {
                 return NotFound();
             }
 
-            var contacts = await _context.Contacts
-                .FirstOrDefaultAsync(m => m.id == id);
+            var contacts = _contactsList.Find(contact => contact.id == id);
             if (contacts == null)
             {
                 return NotFound();
@@ -48,27 +150,26 @@ namespace CommunicationAppApi.Controllers
             return Json(contacts);
         }
 
-     
+
 
         // POST: Contacts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-    
+
         public async Task<IActionResult> Create([Bind("id,name,server")] Contacts contacts)
         {
             if (ModelState.IsValid)
-            { 
-                _context.Add(contacts);
-                await _context.SaveChangesAsync();
-                return Created("/api/Contacts/"+contacts.id,contacts);
+            {
+                _contactsList.Add(contacts);
+                return Created("/api/Contacts/" + contacts.id, contacts);
 
             }
-            return BadRequest();        
+            return BadRequest();
         }
 
-      
-   
+
+
 
         // PUT: Contacts/Edit/5
         [HttpPut]
@@ -77,8 +178,11 @@ namespace CommunicationAppApi.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Update(contacts);
-                await _context.SaveChangesAsync();
+                Contacts update = _contactsList.Find(contact => contact.id == contacts.id);
+                _contactsList.Remove(update);
+                update.name = contacts.name;
+                update.server = contacts.server;
+                _contactsList.Add(update);
                 return NoContent();
 
             }
@@ -90,9 +194,8 @@ namespace CommunicationAppApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var contacts = await _context.Contacts.FindAsync(id);
-            _context.Contacts.Remove(contacts);
-            await _context.SaveChangesAsync();
+            var contacts = _contactsList.Find(contact => contact.id == id);
+            _contactsList.Remove(contacts);
             return NoContent();
         }
 
@@ -102,8 +205,9 @@ namespace CommunicationAppApi.Controllers
 
         private bool ContactsExists(string id)
         {
-            return (_context.Contacts?.Any(e => e.id == id)).GetValueOrDefault();
+            return (_contactsList?.Any(e => e.id == id)).GetValueOrDefault();
         }
-      
+
     }
 }
+

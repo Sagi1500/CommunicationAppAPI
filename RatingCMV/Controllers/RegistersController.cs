@@ -5,158 +5,105 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using CommunicationAppApi;
 using Domain;
 
 namespace CommunicationAppApi.Controllers
 {
     [ApiController]
-    [Route("/api/[controller]")]
+    [Route("api/[controller]")]
     public class RegistersController : Controller
     {
-        private readonly RegistersContext _registersContext;
-        private readonly ContactsContext _contactsContext;
+        private readonly RegistersContext _context;
 
-        public RegistersController(RegistersContext _registersContext, ContactsContext _contactsContext)
+        public RegistersController(RegistersContext context)
         {
-            _registersContext = _registersContext;
-            _contactsContext = _contactsContext;    
+            _context = context;
         }
 
-        // GET: Registers
+        // GET: Contacts
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return Json(await _registersContext.Registers.ToListAsync());
-                        
+            return Json(await _context.Registers.ToListAsync());
         }
 
-        //// GET: Registers/Details/5
-        //public async Task<IActionResult> Details(string id)
-        //{
-        //    if (id == null || _registersContext.Registers == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: Contacts/Details/5
 
-        //    var registers = await _registersContext.Registers
-        //        .FirstOrDefaultAsync(m => m.id == id);
-        //    if (registers == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Details(string id)
+        {
+            if (id == null || _context.Registers == null)
+            {
+                return NotFound();
+            }
 
-        //    return View(registers);
-        //}
+            var contacts = await _context.Registers
+                .FirstOrDefaultAsync(m => m.id == id);
+            if (contacts == null)
+            {
+                return NotFound();
+            }
 
-        //// GET: Registers/Create
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
+            return Json(contacts);
+        }
 
-        //// POST: Registers/Create
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("id,password")] Registers registers)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _registersContext.Add(registers);
-        //        await _registersContext.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(registers);
-        //}
 
-        //// GET: Registers/Edit/5
-        //public async Task<IActionResult> Edit(string id)
-        //{
-        //    if (id == null || _registersContext.Registers == null)
-        //    {
-        //        return NotFound();
-        //    }
 
-        //    var registers = await _registersContext.Registers.FindAsync(id);
-        //    if (registers == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(registers);
-        //}
+        // POST: Contacts/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
 
-        //// POST: Registers/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(string id, [Bind("id,password")] Registers registers)
-        //{
-        //    if (id != registers.id)
-        //    {
-        //        return NotFound();
-        //    }
+        public async Task<IActionResult> Create([Bind("id,password")] Registers registers)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(registers);
+                await _context.SaveChangesAsync();
+                return Created("/api/Contacts/" + registers.id, registers);
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _registersContext.Update(registers);
-        //            await _registersContext.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!RegistersExists(registers.id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(registers);
-        //}
+            }
+            return BadRequest();
+        }
 
-        //// GET: Registers/Delete/5
-        //public async Task<IActionResult> Delete(string id)
-        //{
-        //    if (id == null || _registersContext.Registers == null)
-        //    {
-        //        return NotFound();
-        //    }
 
-        //    var registers = await _registersContext.Registers
-        //        .FirstOrDefaultAsync(m => m.id == id);
-        //    if (registers == null)
-        //    {
-        //        return NotFound();
-        //    }
 
-        //    return View(registers);
-        //}
 
-        //// POST: Registers/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(string id)
-        //{
-        //    if (_registersContext.Registers == null)
-        //    {
-        //        return Problem("Entity set 'RegistersContext.Registers'  is null.");
-        //    }
-        //    var registers = await _registersContext.Registers.FindAsync(id);
-        //    if (registers != null)
-        //    {
-        //        _registersContext.Registers.Remove(registers);
-        //    }
-            
-        //    await _registersContext.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
+        // PUT: Contacts/Edit/5
+        [HttpPut]
 
-        //private bool RegistersExists(string id)
-        //{
-        //  return (_registersContext.Registers?.Any(e => e.id == id)).GetValueOrDefault();
-        //}
+        public async Task<IActionResult> Edit([Bind("id,name,server")] Contacts contacts)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Update(contacts);
+                await _context.SaveChangesAsync();
+                return NoContent();
+
+            }
+            return BadRequest();
+        }
+
+
+        // DELETE: Contacts/Delete/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var contacts = await _context.Registers.FindAsync(id);
+            _context.Registers.Remove(contacts);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+
+
+
+
+        private bool ContactsExists(string id)
+        {
+            return (_context.Registers?.Any(e => e.id == id)).GetValueOrDefault();
+        }
+
     }
 }
