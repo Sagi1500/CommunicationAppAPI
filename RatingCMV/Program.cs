@@ -1,4 +1,4 @@
-
+﻿
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -9,6 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 //using CommunicationAppApi.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<RegistersContext>(options =>
+//using CommunicationAppApi.Hubs;
+
+    options.UseSqlServer(builder.Configuration.GetConnectionString("RegistersContext") ?? throw new InvalidOperationException("Connection string 'RegistersContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -54,7 +59,7 @@ builder.Services.AddCors(options =>
     app.UseRouting();
     app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Ratings}/{action=Index}/{id?}");
+        pattern: "{controller=Registers}/{action=Index}/{id?}");
 
     app.Run();
 
