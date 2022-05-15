@@ -26,6 +26,19 @@ namespace CommunicationAppApi.Controllers
             return View(await _context.Ratings.ToListAsync());
         }
 
+        // GET: Ratings Search
+        public async Task<IActionResult> Search(string query)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                return Json(await _context.Ratings.ToListAsync());
+            }
+            var q = _context.Ratings.Where(r => r.Name.Contains(query) || r.Description.Contains(query));
+
+            return Json(await q.ToListAsync());
+        }
+
+
         // GET: Ratings/Details/5
         public async Task<IActionResult> Details(int? id)
         {

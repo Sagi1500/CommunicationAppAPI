@@ -18,9 +18,6 @@ namespace CommunicationApi
             modelBuilder.Entity<Users>().HasKey(e => e.id);
         }
         public DbSet<Users>? Users { get; set; }
-
-
-
     }
 }
 
