@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
-namespace CommunicationApi
+using Domain;
+namespace CommunicationAppApi
 {
-    public class UsersContext : DbContext
+    public class ContactsContext : DbContext
     {
-        private const string connectionString = "server=localhost;port=3306;database=Users;user=root;password=SagiShoval";
-
+        private const string connectionString = "server=localhost;port=3306;database=Contacts;user=root;password=SagiShoval";
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseMySql(connectionString, MariaDbServerVersion.AutoDetect(connectionString));
@@ -15,9 +15,10 @@ namespace CommunicationApi
         {
             // Configuring the Name property as the primary
             // key of the Items table
-            modelBuilder.Entity<Users>().HasKey(e => e.id);
+
+            modelBuilder.Entity<Contacts>().HasKey(e => e.id);
         }
-        public DbSet<Users>? Users { get; set; }
+        public DbSet<Contacts>? Contacts { get; set; }
     }
 }
 

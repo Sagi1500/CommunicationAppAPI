@@ -165,5 +165,10 @@ namespace CommunicationAppApi.Controllers
         {
             return _context.Ratings.Any(e => e.Id == id);
         }
+
+        public async Task<IActionResult> Ajax()
+        {
+            return View();
+        }
     }
 }

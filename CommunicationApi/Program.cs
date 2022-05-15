@@ -5,10 +5,11 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using CommunicationApi;
+using CommunicationAppApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<UsersContext>();
+builder.Services.AddDbContext<ContactsContext>();
 // Add services to the container.
 
 builder.Services.AddControllers();
