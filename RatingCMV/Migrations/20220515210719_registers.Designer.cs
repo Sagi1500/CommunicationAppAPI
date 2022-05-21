@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CommunicationAppApi.Migrations
 {
-    [DbContext(typeof(RegistersContext))]
     [Migration("20220515210719_registers")]
     partial class registers
     {

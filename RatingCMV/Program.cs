@@ -15,8 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 //builder.Services.AddSignalR();
 builder.Services.AddDbContext<RatingsContext>();
-builder.Services.AddDbContext<ContactsContext>();
-builder.Services.AddDbContext<RegistersContext>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

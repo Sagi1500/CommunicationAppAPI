@@ -20,9 +20,6 @@ namespace CommunicationAppApi
         }
 
         public DbSet<Rating>? Ratings { get; set; }
-
-
-
     }
 }
 
