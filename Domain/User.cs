@@ -10,13 +10,13 @@ namespace Domain
         [Required]
         [RegularExpression(@"^[a-zA-Z0-9_]+$")]
         [Display(Name = "UserName")]
-        public string? id { get; set; }
+        public string? Id { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        public string? password { get; set; }
+        public string? Password { get; set; }
 
         [JsonIgnore]
-        public List<Contact> contactsList { get; set; } = new List<Contact>();
+        public List<Contact> ContactsList { get; set; } = new List<Contact>();
     }
 }

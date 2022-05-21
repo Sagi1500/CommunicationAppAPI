@@ -7,25 +7,25 @@ namespace Domain
     {
         [Key]
         [Required]
-        public int id { get; set; }
+        public int Id { get; set; }
         [Required]
-        public string? content { get; set; }
+        public string? Content { get; set; }
 
-        public DateTime created { get; } = DateTime.Now;
-
-        [JsonIgnore]
-        public Contact contact { get; set; }
+        public DateTime Created { get; } = DateTime.Now;
 
         [JsonIgnore]
-        [RegularExpression(@"^[a-zA-Z0-9_]+$")]
-        public string? contactName { get; set; }
+        public Contact Contact{ get; set; }
 
         [JsonIgnore]
         [RegularExpression(@"^[a-zA-Z0-9_]+$")]
-        public string? userName { get; set; }
+        public string? ContactId { get; set; }
 
         [JsonIgnore]
-        public bool sent { get; set; }
+        [RegularExpression(@"^[a-zA-Z0-9_]+$")]
+        public string? UserId { get; set; }
+
+        [JsonIgnore]
+        public bool Sent { get; set; }
 
         
     }

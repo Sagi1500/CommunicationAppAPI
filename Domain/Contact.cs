@@ -8,24 +8,27 @@ namespace Domain
         [Key]
         [Required]
         [RegularExpression(@"^[a-zA-Z0-9_]+$")]
-        public string? id { get; set; }
+        public string? Id { get; set; }
+        
+        public string? Name { get; set; }
+        
+        [Required]
+        public string? Server { get; set; }
+        
+        public string Last { get; set; }
+        
+        public DateTime Lastdate { get; set; }
+
+        [JsonIgnore]
+        public List<Message> MessagesList { get; set; } = new List<Message>();
+
+        [JsonIgnore]
+        public User User { get; set; }
 
         [Key]
         [Required]
+        [JsonIgnore]
         [RegularExpression(@"^[a-zA-Z0-9_]+$")]
-        public string? name { get; set; }
-        
-        [Required]
-        public string? server { get; set; }
-        
-        public string last { get; set; }
-        
-        public DateTime lastdate { get; set; }
-
-        [JsonIgnore]
-        public List<Message> messagesList { get; set; } = new List<Message>();
-
-        [JsonIgnore]
-        public User user { get; set; }
+        public string? UserId { get; set; }
     }
 }

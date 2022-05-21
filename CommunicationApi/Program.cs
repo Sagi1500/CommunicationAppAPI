@@ -5,11 +5,17 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using CommunicationAppApi;
+using CommunicationApi.Data;
+using CommunicationApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //builder.Services.AddDbContext<ContactsContext>();
 // Add services to the container.
+
+builder.Services.AddDbContext<ApplicationContext>();
+
+builder.Services.AddScoped<UsersServices>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
