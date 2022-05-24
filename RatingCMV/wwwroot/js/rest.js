@@ -3,6 +3,7 @@
 
 
 //Contacts:
+/*
 async function getAllC() {
     const r = await fetch('/api/Contacts');
     const d = await r.json();
@@ -80,3 +81,4 @@ async function delM() {
     });
     console.log(r);
 }
+*/

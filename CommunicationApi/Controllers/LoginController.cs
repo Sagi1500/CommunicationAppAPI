@@ -25,7 +25,11 @@ namespace CommunicationApi.Controllers
         [HttpPost]
         public async Task<IActionResult> PostLogin([Bind("Id,Password")] User user)
         {
-            // checking if the user is already exists
+            //[Bind("Id,Password")] User user
+            //User user = new User();
+            //user.Id = Id;
+            //user.Password = password;
+            //checking if the user is already exists
             if (!_service.UserExists(user.Id))
             {
                 return BadRequest();
@@ -42,11 +46,11 @@ namespace CommunicationApi.Controllers
                     new Claim(JwtRegisteredClaimNames.Sub,_configuration["JWTParams:Subject"]),
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()),
-                    new Claim("UserId",user.Id)
+                    new Claim("Id",user.Id)
                 };
 
-                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTParams:SecretKey"]));
-                var signIn = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTParams:Key"]));
+                var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                 var token = new JwtSecurityToken(
                     _configuration["JWTParams:Issuer"],
                     _configuration["JWTParams:Audience"],

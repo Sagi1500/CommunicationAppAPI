@@ -1,5 +1,4 @@
-﻿
-<script>
+﻿<script>
 
     //Users functions
     async function getAllR() {
@@ -91,6 +90,36 @@ async function postL() {
 
 
 
+<script>
+    var token = '';
+    async function login() {
+         $.ajax({
+            url: 'https://localhost:7049/api/Login?Id=Sagi&Password=1',
+            type: 'POST',
+            contentType: 'application/json',
+            success: function(data) { token = data },
+            error: function() { },
+        });
+        console.log(token);
+    }
+
+    async function getLogged(){ 
+        $.ajax({
+            url: 'https://localhost:7049/api/Contacts',
+            type: 'GET',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('Authorization', 'Bearer '+token);
+            },
+            data: {},
+            success: function(data) { console.log(data); },
+            error: function() { },
+        });
+    }
+
+</script>
+
+
+
 
 <div>Login:</div>
 <button onclick="postL()">Login</button>
@@ -111,7 +140,9 @@ async function postL() {
 <button onclick="postM()">Post</button>
 <button onclick="putM()">Put</button>
 <button onclick="delM()">Delete</button>
-
+<div>Hemi:</div>
+<button onclick="login()">login</button>
+<button onclick="getLogged()">get</button>
 @section Scripts{
     <script src="~/js/rest.js"></script>
 }
