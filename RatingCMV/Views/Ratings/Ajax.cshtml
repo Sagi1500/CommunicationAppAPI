@@ -1,8 +1,143 @@
-﻿<button onclick="getAll()">GetAll</button>
-<button onclick="get()">Get</button>
-<button onclick="post()">Post</button>
-<button onclick="put()">Put</button>
-<button onclick="del()">Delete</button>
+﻿
+<script>
+
+    //Users functions
+    async function getAllR() {
+    const r = await fetch('https:/localhost:7049/api/Users');
+    const d = await r.json();
+    console.log(d);
+    }
+
+
+    async function getR() {
+    const r = await fetch('https:/localhost:7049/api/Users/sagi');
+    const d = await r.json();
+    console.log(d);
+    }
+
+
+    async function postR() {
+    const r = await fetch('https:/localhost:7049/api/Users', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: 'a1', password: 'a1' })
+    });
+    console.log(r);
+    }
+
+
+    async function delR() {
+    const r = await fetch('https:/localhost:7049/api/Users/a1', {
+        method: 'DELETE'
+    });
+    console.log(r);
+    }
+    
+    //Login function
+   
+async function postL() {
+    const r = await fetch('https:/localhost:7049/api/Login', {
+        method: 'POST',
+        headers: new Headers({
+            'Content-Type': 'application/json',
+        }),
+          body: JSON.stringify({ id: 'Sagi', password: "1" }),
+    })
+        .then((response) => token = response.json());
+        console.log(token);
+        console.log(r.json());
+        //return r.json();
+    }
+
+
+
+    var token = '';
+
+
+ 
+
+    // Contacts functions
+    /*
+    async function getAllC() {
+        $.ajax({
+            url: 'https://localhost:7049/api/Contacts',
+            type: 'GET',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+            },
+            data: {},
+            success: function(data) { console.log(data); },
+            error: function() { },
+        });
+    
+    }
+    */
+
+    async function getAllC() {
+        const response = await fetch('https:/localhost:7049/api/Contacts', {
+            headers: new headers({
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            })
+        })
+    .then((response) => response.json())
+    .then((messages) => {console.log("messages");});
+    
+}
+
+</script>
+
+
+
+
+<div>Login:</div>
+<button onclick="postL()">Login</button>
+<div>Registers:</div>
+<button onclick="getAllR()">GetAll</button>
+<button onclick="getR()">Get</button>
+<button onclick="postR()">Post</button>
+<button onclick="delR()">Delete</button>
+<div>Contacts:</div>
+<button onclick="getAllC()">GetAll</button>
+<button onclick="getC()">Get</button>
+<button onclick="postC()">Post</button>
+<button onclick="putC()">Put</button>
+<button onclick="delC()">Delete</button>
+<div>Messages:</div>
+<button onclick="getAllM()">GetAll</button>
+<button onclick="getM()">Get</button>
+<button onclick="postM()">Post</button>
+<button onclick="putM()">Put</button>
+<button onclick="delM()">Delete</button>
+
 @section Scripts{
     <script src="~/js/rest.js"></script>
 }
+
+
+
+
+<!--
+       
+    const r = await fetch('https:/localhost:7049/api/Login', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ id: 'Sagi', password: "1" }),
+    success: function (data) { token = data},
+    error: function () {},
+       
+
+     $.ajax({
+            url: 'http://localhost:7049/api/Login?id=Sagi&password=1',
+            type: 'POST',
+            contentType: 'application/json',
+            success: function(data) { token = data },
+            error: function(data) { console.log(data) }
+        });
+});
+     
+    --> 

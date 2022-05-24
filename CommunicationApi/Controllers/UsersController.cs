@@ -1,26 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using CommunicationApi.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using Domain;
 using CommunicationApi.Services;
-
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace CommunicationApi.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
-    public class UsersController : Controller
+    public class UsersController : ControllerBase
     {
-        private readonly UsersServices _service;
 
-        public UsersController(UsersServices service)
+        private readonly UsersServices _service;
+        private IConfiguration _configuration;
+
+        public UsersController(UsersServices service, IConfiguration confing)
         {
             _service = service;
+            _configuration = confing;
         }
 
         [HttpGet]
@@ -47,40 +46,59 @@ namespace CommunicationApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddUser ([Bind("Id,Password")] User user)
+        public async Task<IActionResult> PostUser([Bind("Id,Password")] User user)
         {
+            // checking if the user is not exists, 
+            if (_service.UserExists(user.Id))
+            {
+                return BadRequest();
+            }
+
+            // adding the user to the Users table.
             try
             {
                 var res = await _service.AddNewUser(user);
                 if (res == false)
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
-                return Ok();
             }
             catch (Exception e)
-            { 
-                return NotFound();
+            {
+                return BadRequest();
             }
-           
+
+
+            // generate new JWT token.
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub,_configuration["JWTParams:Subject"]),
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()),
+                new Claim("UserId",user.Id)
+            };
+
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTParams:SecretKey"]));
+            var mac = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                _configuration["JWTParams:Issuer"],
+                _configuration["JWTParams:Audience"],
+                claims,
+                expires: DateTime.UtcNow.AddMinutes(20),
+                signingCredentials: mac);
+            return Ok(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
-        [HttpDelete]
+        [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete (String Id)
         {
             var res = await _service.DeleteUser(Id);
             if (res == false)
             {
-                return NotFound();
+                return BadRequest();
             }
             return Ok();
-        } 
-
-       
-
-        
-
-
+        }
     }
 }
 

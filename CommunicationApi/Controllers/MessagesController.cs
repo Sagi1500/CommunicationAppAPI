@@ -10,7 +10,7 @@ using Domain;
 
 namespace CommunicationApi.Controllers
 {
-    public class MessagesController : Controller
+    public class MessagesController : ControllerBase
     {
         private readonly ApplicationContext _context;
 
@@ -19,6 +19,7 @@ namespace CommunicationApi.Controllers
             _context = context;
         }
 
+        /*
         // GET: Messages
         public async Task<IActionResult> Index()
         {
@@ -164,5 +165,6 @@ namespace CommunicationApi.Controllers
         {
           return (_context.Messages?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+        */
     }
 }

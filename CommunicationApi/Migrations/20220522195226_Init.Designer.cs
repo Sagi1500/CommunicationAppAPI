@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CommunicationApi.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20220521164518_Init")]
+    [Migration("20220522195226_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,13 +30,13 @@ namespace CommunicationApi.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("Last")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime>("Lastdate")
+                    b.Property<DateTime?>("Lastdate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Server")

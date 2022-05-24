@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using CommunicationApi.Data;
 using Domain;
 
@@ -13,15 +7,14 @@ namespace CommunicationApi.Services
 {
     public class UsersServices
     {
-
         private ApplicationContext _context;
 
-        public UsersServices()
+        public UsersServices(ApplicationContext applicationContext)
         {
-            _context = new ApplicationContext();
+            _context = applicationContext;
         }
 
-        public async Task<IEnumerable<User>> GetAll()
+        public async Task<IEnumerable<User>?> GetAll()
         {
             if (_context.Users ==  null)
             {
@@ -30,7 +23,7 @@ namespace CommunicationApi.Services
             return await _context.Users.ToListAsync();
         }
 
-        public async Task<User> GetUser(String? Id)
+        public async Task<User?> GetUser(String? Id)
         {
             if (Id == null || _context.Users == null)
             {
@@ -67,9 +60,17 @@ namespace CommunicationApi.Services
             if (u != null)
             {
                  _context.Users.Remove(u);
+                await _context.SaveChangesAsync();
+                return true;
             }
-            await _context.SaveChangesAsync();
-            return true;
+            return false;
         }
+
+        public bool UserExists(string id)
+        {
+            return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+     
     }
 }
