@@ -20,6 +20,8 @@ namespace CommunicationApi.Controllers
         private readonly MessagesServices _messagesService;
         private readonly UsersServices _userService;
         private readonly ContactsServices _contactsServices;
+
+        //Constructor.
         public MessagesController(MessagesServices messageService, UsersServices usersServices, ContactsServices contactService)
         {
             _messagesService = messageService;
@@ -30,7 +32,7 @@ namespace CommunicationApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetContacts(String? id)
         {
-            // find the logged user.
+            // Find the Id of the currently logged in user.
             var userId = GetLoggedInUser();
             if (userId == null)
             {
@@ -62,7 +64,7 @@ namespace CommunicationApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(String id, [Bind("Content,ContactId")] Message message)
         {
-            // find the logged user.
+            // Find the Id of the currently logged in user.
             var userId = GetLoggedInUser();
             if (userId == null)
             {
@@ -101,7 +103,7 @@ namespace CommunicationApi.Controllers
         public async Task<IActionResult> Get(String id, int id2)
         {
 
-            // find the logged user id.
+            // Find the Id of the currently logged in user.
             var userId = GetLoggedInUser();
             if (userId == null)
             {
@@ -143,7 +145,7 @@ namespace CommunicationApi.Controllers
         [HttpPut("{id2}")]
         public async Task<IActionResult> Put(String id, int id2, [Bind("Content")] Message message)
         {
-            // find the logged user id.
+            // Find the Id of the currently logged in user.
             var userId = GetLoggedInUser();
             if (userId == null)
             {
@@ -155,9 +157,13 @@ namespace CommunicationApi.Controllers
             {
                 return NotFound();
             }
+
+            // edit values in the new message.
             message.Id = id2;
             message.ContactId = id;
             message.UserId = userId;
+
+            // update the message in DB.
             var update = await _messagesService.EditMessage(message);
             if (update == true)
             {
@@ -171,7 +177,7 @@ namespace CommunicationApi.Controllers
         public async Task<IActionResult> Delete (String id, int id2)
         {
 
-            // find the logged user id.
+            // Find the Id of the currently logged in user.
             var userId = GetLoggedInUser();
             if (userId == null)
             {

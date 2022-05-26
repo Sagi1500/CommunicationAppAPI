@@ -22,11 +22,14 @@ namespace CommunicationApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetContacts()
         {
+            // Find the Id of the currently logged in user.
             var userId = GetLoggedInUser();
             if (userId == null)
             {
                 return Unauthorized();
             }
+
+            // Get all contacts from DB.
             var res = await _contactService.GetAll(userId);
             if (res == null)
             {
@@ -38,11 +41,14 @@ namespace CommunicationApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(String id)
         {
+            // Find the Id of the currently logged in user.
             var userId = GetLoggedInUser();
             if (userId == null)
             {
                 return Unauthorized();
             }
+
+            // Get contact by Id from DB.
             var res = await _contactService.GetContact(userId, id);
             if (res == null)
             {
@@ -57,16 +63,22 @@ namespace CommunicationApi.Controllers
         {
             if (ModelState.IsValid)
             {
+                // For safty initialize values to null.
                 contact.Last = null;
                 contact.Lastdate = null;
                 try
                 {
+                    // Find the Id of the currently logged in user.
                     var userId = GetLoggedInUser();
                     if (userId == null)
                     {
                         return Unauthorized();
                     }
+
+                    // update UserId property in contact - inserting the logged in user.
                     contact.UserId = userId;
+
+                    // Adding contact to DB.
                     if (contact.Id != contact.UserId && contact.Id != null && _userService.UserExists(contact.Id) )
                     {
                         var res = await _contactService.AddNewContact(contact);
@@ -93,7 +105,7 @@ namespace CommunicationApi.Controllers
         {
             if (ModelState.IsValid)
             {
-                // find the logged user.
+                // Find the Id of the currently logged in user.
                 var userId = GetLoggedInUser();
                 if (userId == null)
                 {
@@ -126,11 +138,14 @@ namespace CommunicationApi.Controllers
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(string Id)
         {
+            // Find the Id of the currently logged in user.
             var userId = GetLoggedInUser();
             if (userId == null)
             {
                 return Unauthorized();
             }
+
+            //Delete contact from DB.
             var res = await _contactService.DeleteContact(userId, Id);
             if (res == true)
             {
@@ -139,6 +154,7 @@ namespace CommunicationApi.Controllers
             return NotFound();
         }
 
+        // This function returns the logged user id.
         private string? GetLoggedInUser()
         {
             var userId = User.FindFirst("Id")?.Value;

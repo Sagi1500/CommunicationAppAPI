@@ -25,10 +25,6 @@ namespace CommunicationApi.Controllers
         [HttpPost]
         public async Task<IActionResult> PostLogin([Bind("Id,Password")] User user)
         {
-            //[Bind("Id,Password")] User user
-            //User user = new User();
-            //user.Id = Id;
-            //user.Password = password;
             //checking if the user is already exists
             if (!_service.UserExists(user.Id))
             {
