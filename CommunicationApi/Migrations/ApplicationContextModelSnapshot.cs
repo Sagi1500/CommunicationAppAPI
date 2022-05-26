@@ -61,7 +61,7 @@ namespace CommunicationApi.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("Sent")
+                    b.Property<bool?>("Sent")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("UserId")

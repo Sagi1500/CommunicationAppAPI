@@ -6,165 +6,216 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CommunicationApi.Data;
+using CommunicationApi.Services;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CommunicationApi.Controllers
 {
+    [Authorize]
+    [ApiController]
+    [Route("api/Contacts/{id}/[Controller]")]
     public class MessagesController : ControllerBase
     {
-        private readonly ApplicationContext _context;
-
-        public MessagesController(ApplicationContext context)
+        private readonly MessagesServices _messagesService;
+        private readonly UsersServices _userService;
+        private readonly ContactsServices _contactsServices;
+        public MessagesController(MessagesServices messageService, UsersServices usersServices, ContactsServices contactService)
         {
-            _context = context;
+            _messagesService = messageService;
+            _userService = usersServices;
+            _contactsServices = contactService;    
         }
 
-        /*
-        // GET: Messages
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> GetContacts(String? id)
         {
-            var applicationContext = _context.Messages.Include(m => m.Contact);
-            return View(await applicationContext.ToListAsync());
-        }
+            // find the logged user.
+            var userId = GetLoggedInUser();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
 
-        // GET: Messages/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Messages == null)
+            // checking if Id is legal.
+            if (id == null)
+            {
+                return BadRequest();
+            }
+
+            // checking if user is exists.
+            var user = _userService.UserExists(id);
+            if (user == false)
             {
                 return NotFound();
             }
 
-            var message = await _context.Messages
-                .Include(m => m.Contact)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (message == null)
+            // return all the messages.
+            var res = await _messagesService.GetAllMessages(id, userId);
+            if (res == null)
             {
                 return NotFound();
             }
-
-            return View(message);
+            return Ok(res);
         }
 
-        // GET: Messages/Create
-        public IActionResult Create()
-        {
-            ViewData["ContactId"] = new SelectList(_context.Contacts, "Id", "Id");
-            return View();
-        }
-
-        // POST: Messages/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Content,ContactId,UserId,Sent")] Message message)
+        public async Task<IActionResult> Post(String id, [Bind("Content,ContactId")] Message message)
         {
-            if (ModelState.IsValid)
+            // find the logged user.
+            var userId = GetLoggedInUser();
+            if (userId == null)
             {
-                _context.Add(message);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Unauthorized();
             }
-            ViewData["ContactId"] = new SelectList(_context.Contacts, "Id", "Id", message.ContactId);
-            return View(message);
-        }
 
-        // GET: Messages/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Messages == null)
+            // checking if Id is legal.
+            if (id == null)
+            {
+                return BadRequest();
+            }
+
+            // checking if user is exists.
+            var user = _userService.UserExists(id);
+            if (user == false)
             {
                 return NotFound();
             }
 
-            var message = await _context.Messages.FindAsync(id);
-            if (message == null)
+            // update message details.
+            message.UserId = userId;
+            message.ContactId = id;
+            message.Sent = true;
+
+            // creating new message.
+            var res = await _messagesService.CreateNewMessage(message);
+            if (res == false)
             {
                 return NotFound();
             }
-            ViewData["ContactId"] = new SelectList(_context.Contacts, "Id", "Id", message.ContactId);
-            return View(message);
+            return Ok(message);
         }
 
-        // POST: Messages/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Content,ContactId,UserId,Sent")] Message message)
+
+        [HttpGet("{id2}")]
+        public async Task<IActionResult> Get(String id, int id2)
         {
-            if (id != message.Id)
+
+            // find the logged user id.
+            var userId = GetLoggedInUser();
+            if (userId == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(message);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MessageExists(message.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ContactId"] = new SelectList(_context.Contacts, "Id", "Id", message.ContactId);
-            return View(message);
-        }
-
-        // GET: Messages/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Messages == null)
+            // chekcing that the user is exists.
+            if (!_userService.UserExists(id))
             {
                 return NotFound();
             }
 
-            var message = await _context.Messages
-                .Include(m => m.Contact)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (message == null)
+            // checking that the contact is exists.
+            Contact c = new Contact();
+            c.UserId = userId;
+            c.Id = id;
+            if (!_contactsServices.ContactExist(c))
             {
                 return NotFound();
             }
 
-            return View(message);
+            // Creating new message
+            Message message = new Message();
+            message.Id = id2;
+            message.ContactId = id;
+            message.UserId = userId;
+
+            // Getting the message.
+            var res = await _messagesService.GetMessageById(message);
+            if (res == null)
+            {
+                return NotFound();
+            }
+            return Ok(res);
         }
 
-        // POST: Messages/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+
+
+        [HttpPut("{id2}")]
+        public async Task<IActionResult> Put(String id, int id2, [Bind("Content")] Message message)
         {
-            if (_context.Messages == null)
+            // find the logged user id.
+            var userId = GetLoggedInUser();
+            if (userId == null)
             {
-                return Problem("Entity set 'ApplicationContext.Messages'  is null.");
+                return Unauthorized();
             }
-            var message = await _context.Messages.FindAsync(id);
-            if (message != null)
+
+            // chekcing that the user is exists.
+            if (!_userService.UserExists(id))
             {
-                _context.Messages.Remove(message);
+                return NotFound();
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            message.Id = id2;
+            message.ContactId = id;
+            message.UserId = userId;
+            var update = await _messagesService.EditMessage(message);
+            if (update == true)
+            {
+                return Ok();
+            }
+            return NotFound();
         }
 
-        private bool MessageExists(int id)
+
+        [HttpDelete("{id2}")]
+        public async Task<IActionResult> Delete (String id, int id2)
         {
-          return (_context.Messages?.Any(e => e.Id == id)).GetValueOrDefault();
+
+            // find the logged user id.
+            var userId = GetLoggedInUser();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            // chekcing that the user is exists.
+            if (!_userService.UserExists(id))
+            {
+                return NotFound();
+            }
+
+            // checking that the contact is exists.
+            Contact c = new Contact();
+            c.UserId = userId;
+            c.Id = id;
+            if (!_contactsServices.ContactExist(c))
+            {
+                return NotFound();
+            }
+
+            // Creating new message
+            Message message = new Message();
+            message.Id = id2;
+            message.ContactId = id;
+            message.UserId = userId;
+
+            // Getting the message.
+            var res = await _messagesService.DeleteMessage(message);
+            if (res == false)
+            {
+                return NotFound();
+            }
+            return Ok();
         }
-        */
+
+        
+        // This function returns the logged user id.
+        private string? GetLoggedInUser()
+        {
+            var userId = User.FindFirst("Id")?.Value;
+            return userId;
+        }
+
+
     }
 }

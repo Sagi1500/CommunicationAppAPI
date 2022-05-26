@@ -68,7 +68,7 @@ namespace CommunicationApi.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UserId = table.Column<string>(type: "varchar(255)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Sent = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Sent = table.Column<bool>(type: "tinyint(1)", nullable: true)
                 },
                 constraints: table =>
                 {

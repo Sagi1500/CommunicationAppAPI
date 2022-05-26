@@ -6,7 +6,6 @@ namespace Domain
     public class Message
     {
         [Key]
-        [Required]
         public int Id { get; set; }
         [Required]
         public string Content { get; set; }
@@ -24,7 +23,6 @@ namespace Domain
         [RegularExpression(@"^[a-zA-Z0-9_]+$")]
         public string? UserId { get; set; }
 
-        [JsonIgnore]
         public bool? Sent { get; set; }
 
         

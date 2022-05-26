@@ -15,23 +15,23 @@ namespace CommunicationApi.Services
         }
 
         
-        public async Task<IEnumerable<Contact>?> GetAll()
+        public async Task<IEnumerable<Contact>?> GetAll(string UserId)
         {
-            if (_context.Contacts == null)
+            if (_context.Contacts == null || UserId == null)
             {
                 return null;
             }
-            return await _context.Contacts.ToListAsync();
+            return await _context.Contacts.Where(c => c.UserId == UserId).ToListAsync();
         }
 
 
-        public async Task<Contact?> GetContact(String? Id)
+        public async Task<Contact?> GetContact(string? UserId, string? Id)
         {
-            if (Id == null || _context.Contacts == null)
+            if (Id == null || _context.Contacts == null || UserId == null || Id == null)
             {
                 return null;
             }
-            var res = await _context.Contacts.Where(c => c.Id == Id).FirstOrDefaultAsync();
+            var res = await _context.Contacts.Where(c => c.Id == Id && c.UserId==UserId).FirstOrDefaultAsync();
             if (res == null)
             {
                 return null;
@@ -45,6 +45,10 @@ namespace CommunicationApi.Services
             {
                 return false;
             }
+            if (ContactExist(contact))
+            {
+                return false;
+            }
             await _context.Contacts.AddAsync(contact);
             await _context.SaveChangesAsync();
             return true;
@@ -53,7 +57,8 @@ namespace CommunicationApi.Services
 
         public async Task<bool> EditContact(Contact newContact)
         {
-            var contacts = await GetContact(newContact.Id);
+            
+            var contacts = await GetContact(newContact.UserId, newContact.Id);
             if (contacts == null)
             {
                 return false;
@@ -66,9 +71,9 @@ namespace CommunicationApi.Services
         }
 
 
-        public async Task<bool> DeleteContact (String id)
+        public async Task<bool> DeleteContact (string UserId, string id)
         {
-            var contacts =  await GetContact(id);
+            var contacts =  await GetContact(UserId,id);
             if (contacts == null)
             {
                 return false;
@@ -76,6 +81,12 @@ namespace CommunicationApi.Services
             _context.Contacts.Remove(contacts);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+
+        public bool ContactExist(Contact contact)
+        {
+            return (_context.Contacts?.Any(c => c.Id == contact.Id && c.UserId== contact.UserId)).GetValueOrDefault();
         }
     }
 }

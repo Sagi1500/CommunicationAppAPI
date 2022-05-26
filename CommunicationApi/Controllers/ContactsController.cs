@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Domain;
+﻿using Domain;
 using CommunicationApi.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CommunicationApi.Controllers
 {
@@ -10,22 +10,24 @@ namespace CommunicationApi.Controllers
     [Route("api/[Controller]")]
     public class ContactsController : ControllerBase
     {
-        private readonly ContactsServices _service;
+        private readonly ContactsServices _contactService;
+        private readonly UsersServices _userService;
 
-        public ContactsController(ContactsServices service)
+        public ContactsController(ContactsServices contactService, UsersServices usersServices)
         {
-            _service = service; 
+            _contactService = contactService;
+            _userService = usersServices;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetContacts()
         {
-            var user = GetLoggedInUser();
-            if (user == null)
+            var userId = GetLoggedInUser();
+            if (userId == null)
             {
                 return Unauthorized();
             }
-            var res = await _service.GetAll();
+            var res = await _contactService.GetAll(userId);
             if (res == null)
             {
                 return NotFound();
@@ -33,10 +35,15 @@ namespace CommunicationApi.Controllers
             return Ok(res);
         }
 
-        [HttpGet("{Id}")]
-        public async Task<IActionResult> GetContact(String? Id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(String id)
         {
-            var res = await _service.GetContact(Id);
+            var userId = GetLoggedInUser();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+            var res = await _contactService.GetContact(userId, id);
             if (res == null)
             {
                 return NotFound();
@@ -50,14 +57,25 @@ namespace CommunicationApi.Controllers
         {
             if (ModelState.IsValid)
             {
+                contact.Last = null;
+                contact.Lastdate = null;
                 try
                 {
-                    var res = await _service.AddNewContact(contact);
-                    if (res == false)
+                    var userId = GetLoggedInUser();
+                    if (userId == null)
                     {
-                        return NotFound();
+                        return Unauthorized();
                     }
-                    return Ok();
+                    contact.UserId = userId;
+                    if (contact.Id != contact.UserId && contact.Id != null && _userService.UserExists(contact.Id) )
+                    {
+                        var res = await _contactService.AddNewContact(contact);
+                        if (res == false)
+                        {
+                            return BadRequest();
+                        }
+                        return Ok();
+                    }
                 }
                 catch (Exception e)
                 {
@@ -69,31 +87,54 @@ namespace CommunicationApi.Controllers
         }
 
 
-
+        
         [HttpPut("{id}")]
-        public async Task<IActionResult> Edit([Bind("Id,Name,Server")] Contact contact)
+        public async Task<IActionResult> Edit(String? id, [Bind("Name,Server")] Contact contact)
         {
             if (ModelState.IsValid)
             {
+                // find the logged user.
+                var userId = GetLoggedInUser();
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }
 
-                var res = await _service.EditContact(contact);
+                // Asking to find a user with same Id and UserId.
+                if (userId == id)
+                {
+                    return BadRequest();
+                }
+
+                // update contact values before editing.
+                contact.UserId = userId;
+                contact.Id = id;
+                var res = await _contactService.EditContact(contact);
+
+                // returning value.
                 if (res == true)
                 {
-                    return NoContent();
+                    return Ok();
                 }
 
             }
-            return BadRequest();
+            return NotFound();
         }
+        
 
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(String id)
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> Delete(string Id)
         {
-            var res = await _service.DeleteContact(id);
+            var userId = GetLoggedInUser();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+            var res = await _contactService.DeleteContact(userId, Id);
             if (res == true)
             {
-                return NoContent();
+                return Ok();
             }
             return NotFound();
         }

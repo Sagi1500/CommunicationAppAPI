@@ -14,7 +14,7 @@ namespace CommunicationApi.Controllers
     {
 
         private readonly UsersServices _service;
-        private IConfiguration _configuration;
+        public IConfiguration _configuration;
 
         public UsersController(UsersServices service, IConfiguration confing)
         {
@@ -34,10 +34,10 @@ namespace CommunicationApi.Controllers
         }
 
 
-        [HttpGet("{Id}")]
-        public async Task<IActionResult> Get(String Id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(String id)
         {
-            var res = await _service.GetUser(Id);
+            var res = await _service.GetUser(id);
             if (res == null)
             {
                 return NotFound();
@@ -70,15 +70,14 @@ namespace CommunicationApi.Controllers
 
 
             // generate new JWT token.
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub,_configuration["JWTParams:Subject"]),
-                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()),
-                new Claim("Id",user.Id)
-            };
+            var claims = new[] {
+                  new Claim(JwtRegisteredClaimNames.Sub, _configuration["JWTParams:Subject"]),
+                  new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                  new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                  new Claim("Id",user.Id)
+                };
 
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTParams:Key"]));
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTParams:SecretKey"]));
             var mac = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
                 _configuration["JWTParams:Issuer"],
@@ -86,13 +85,14 @@ namespace CommunicationApi.Controllers
                 claims,
                 expires: DateTime.UtcNow.AddMinutes(20),
                 signingCredentials: mac);
+
             return Ok(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
-        [HttpDelete("{Id}")]
-        public async Task<IActionResult> Delete (String Id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete (String id)
         {
-            var res = await _service.DeleteUser(Id);
+            var res = await _service.DeleteUser(id);
             if (res == false)
             {
                 return BadRequest();
