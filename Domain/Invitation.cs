@@ -6,13 +6,13 @@ namespace Domain
     public class Invitation
     {
         [Required]
-        public string? From;
+        public string From;
 
         [Required]
-        public string? To;
+        public string To;
 
         [Required]
-        public string? Server;
+        public string Server;
 
     }
 }

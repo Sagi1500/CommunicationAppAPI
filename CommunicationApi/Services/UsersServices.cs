@@ -71,6 +71,21 @@ namespace CommunicationApi.Services
             return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-     
+        public async Task<bool> AddContact(string id,Contact contact)
+        {
+            if (id==null||contact==null || _context.Users == null)
+            {
+                return false;
+            }
+            var u = await _context.Users.FindAsync(id);
+            if (u != null)
+            {
+                u.ContactsList.Add(contact);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
     }
 }
