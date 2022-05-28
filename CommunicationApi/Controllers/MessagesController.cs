@@ -62,7 +62,7 @@ namespace CommunicationApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(String id, [Bind("Content,ContactId")] Message message)
+        public async Task<IActionResult> Post(String id, [Bind("Content")] Message message)
         {
             // Find the Id of the currently logged in user.
             var userId = GetLoggedInUser();

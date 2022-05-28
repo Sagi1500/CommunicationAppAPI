@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using CommunicationApi.Data;
 using CommunicationApi.Services;
+using CommunicationApi.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
+
+builder.Services.AddSignalR();
 
 
 builder.Services.AddSwaggerGen(c =>
@@ -90,6 +93,14 @@ app.UseCors("Allow All");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
+
+app.UseEndpoints(endpoint =>
+{
+    endpoint.MapHub<HubService>("/HubService");
+});
+
+
 
 app.MapControllers();
 
