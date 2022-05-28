@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 
@@ -18,5 +19,6 @@ namespace Domain
 
         [JsonIgnore]
         public List<Contact>? ContactsList { get; set; } = new List<Contact>();
+       
     }
 }

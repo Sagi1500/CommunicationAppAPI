@@ -86,7 +86,7 @@ namespace CommunicationApi.Controllers
                         {
                             return BadRequest();
                         }
-                        return Ok();
+                        return Created("/api/Contacts",contact);
                     }
                 }
                 catch (Exception e)
