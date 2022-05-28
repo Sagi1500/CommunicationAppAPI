@@ -15,13 +15,15 @@ builder.Services.AddScoped<UsersServices>();
 builder.Services.AddScoped<ContactsServices>();
 builder.Services.AddScoped<MessagesServices>();
 
+builder.Services.AddScoped<AppHubServices>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
 
 builder.Services.AddSignalR();
 
+//builder.Services.AddSwaggerGen();
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -77,6 +79,8 @@ builder.Services.AddCors(options =>
 });
 
 
+builder.Services.AddSingleton<IDictionary<string, string>>(opts => new Dictionary<string, string>()); 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -90,16 +94,15 @@ if (app.Environment.IsDevelopment())
 app.UseCors("Allow All");
 
 
+app.UseRouting();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
 app.UseEndpoints(endpoint =>
 {
-    endpoint.MapHub<HubService>("/HubService");
+    endpoint.MapHub<AppHub>("/AppHub");
 });
-
 
 
 app.MapControllers();
