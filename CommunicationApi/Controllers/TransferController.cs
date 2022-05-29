@@ -22,19 +22,19 @@ namespace CommunicationApi.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Post(string From, string To, string Content)
+        public async Task<IActionResult> Post([Bind("From,To,Content")] Transfer transfer)
         {
             // checking if the logged user is equal to from is invitaion.
-            if (To == null ||
-                From == null ||
-                Content == null ||
-                 _userService.UserExists(To) == false)
+            if (transfer.To == null ||
+                transfer.From == null ||
+                transfer.Content == null ||
+                 _userService.UserExists(transfer.To) == false)
             {
                 return BadRequest();
             }
 
             // create contact.
-            Message message = InitializeMessage(From, To, Content);
+            Message message = InitializeMessage(transfer.From, transfer.To, transfer.Content);
 
             // Adding the contact to the logged in server.
             var res = await _messagesService.CreateNewMessage(message);
@@ -43,7 +43,7 @@ namespace CommunicationApi.Controllers
                 return BadRequest();
             }
 
-            return Created("/api/Contacts/"+From+"/Messages/",message);
+            return Created("/api/Contacts/"+ transfer.From + "/Messages/",message);
         }
 
         // The function recieves the invitation information and the logged in user and create contact.

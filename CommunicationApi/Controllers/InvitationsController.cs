@@ -7,6 +7,7 @@ namespace CommunicationApi.Controllers
 {
     
     [Route("api/[controller]")]
+    [ApiController]
     public class InvitationsController : ControllerBase
     {
         //private readonly UsersServices _userService;
@@ -21,25 +22,28 @@ namespace CommunicationApi.Controllers
         }
 
         [HttpPost]
-        //public async Task<IActionResult> AddContact([Bind("From,To,Server")] Invitation invitation)
-        public async Task<IActionResult> AddContact(string From,string To,string Server)
+          public async Task<IActionResult> AddContact([Bind("From,To,Server")] Invitation invitation)
         {
            
-                Contact contact = InitializeConteact(From,To, Server);
-                if (_usersServices.UserExists(To))
-                {
+            Contact? contact = InitializeConteact(invitation.From, invitation.To, invitation.Server);
+            if (contact != null && invitation.To!= null && _usersServices.UserExists(invitation.To))
+            {
                     
-                    await _contactsServices.AddNewContact(contact);
+                await _contactsServices.AddNewContact(contact);
                    
-                    return Created("/api/Contacts",contact);
-                }
-                return BadRequest();
+                return Created("/api/Contacts",contact);
+            }
+            return BadRequest();
 
         }
 
         // The function recieves the invitation information and the logged in user and create contact.
-        private Contact InitializeConteact(string Id, string UserId, string Server)
+        private Contact? InitializeConteact(string? Id, string? UserId, string? Server)
         {
+            if (Id == null || UserId == null || Server == null)
+            {
+                return null;
+            }
             Contact newContact = new Contact();
             newContact.Id = Id;
             newContact.Name = Id;

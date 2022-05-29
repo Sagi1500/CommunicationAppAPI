@@ -95,7 +95,6 @@ namespace CommunicationApi.Controllers
                 }
             }
             return BadRequest();
-
         }
 
 
@@ -126,11 +125,11 @@ namespace CommunicationApi.Controllers
                 // returning value.
                 if (res == true)
                 {
-                    return Ok();
+                    return NoContent();
                 }
 
             }
-            return NotFound();
+            return BadRequest();
         }
         
 
@@ -149,9 +148,9 @@ namespace CommunicationApi.Controllers
             var res = await _contactService.DeleteContact(userId, Id);
             if (res == true)
             {
-                return Ok();
+                return NoContent();
             }
-            return NotFound();
+            return BadRequest();
         }
 
         // This function returns the logged user id.

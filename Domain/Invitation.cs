@@ -5,14 +5,11 @@ namespace Domain
 {
     public class Invitation
     {
-        [Required]
-        public string From;
+        public string? From { get; set; }
 
-        [Required]
-        public string To;
+        public string? To { get; set; }
 
-        [Required]
-        public string Server;
+        public string? Server { get; set; }
 
     }
 }

@@ -52,6 +52,12 @@ namespace CommunicationApi.Controllers
                 return NotFound();
             }
 
+            // checking for asking messages with himself.
+            if (userId == id)
+            {
+                return BadRequest();
+            }
+
             // return all the messages.
             var res = await _messagesService.GetAllMessages(id, userId);
             if (res == null)
@@ -88,6 +94,12 @@ namespace CommunicationApi.Controllers
                 return NotFound();
             }
 
+            // checking for asking messages with himself.
+            if (userId == id)
+            {
+                return BadRequest();
+            }
+
             // update message details.
             message.UserId = userId;
             message.ContactId = id;
@@ -99,7 +111,7 @@ namespace CommunicationApi.Controllers
             {
                 return NotFound();
             }
-            return Ok(message);
+            return Created("/api/Contacts/" + message.ContactId + "/Messages/", message);
         }
 
 
@@ -215,7 +227,7 @@ namespace CommunicationApi.Controllers
             {
                 return NotFound();
             }
-            return Ok();
+            return NoContent();
         }
 
         

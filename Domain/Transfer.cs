@@ -5,14 +5,11 @@ namespace Domain
 {
     public class Transfer
     {
-        [Required]
-        public string? From;
+        public string? From { get; set; }
 
-        [Required]
-        public string? To;
+        public string? To { get; set; } 
 
-        [Required]
-        public string? Content;
+        public string? Content { get; set; }
 
     }
 }
