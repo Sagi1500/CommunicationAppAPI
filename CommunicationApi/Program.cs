@@ -68,13 +68,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("Allow All",
-        builder =>
+    options.AddDefaultPolicy( builder =>
         {
             builder
+            .WithOrigins("http://localhost:3000")
             .AllowAnyMethod()
-            .AllowAnyOrigin()
-            .AllowAnyHeader();
+            .AllowAnyHeader()
+            .AllowCredentials();
         });
 });
 
@@ -91,20 +91,20 @@ if (app.Environment.IsDevelopment())
 }
 
 
-app.UseCors("Allow All");
-
-
 app.UseRouting();
+
+app.UseCors();
+
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.MapControllers();
 app.UseEndpoints(endpoint =>
 {
     endpoint.MapHub<AppHub>("/AppHub");
 });
 
 
-app.MapControllers();
+
 
 app.Run();
