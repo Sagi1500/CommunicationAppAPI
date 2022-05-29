@@ -54,6 +54,6 @@ app.UseStaticFiles();
 app.UseRouting();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Ratings}/{action=Ajax}/{id?}");
+    pattern: "{controller=Ratings}/{action=Index}/{id?}");
 
 app.Run();
