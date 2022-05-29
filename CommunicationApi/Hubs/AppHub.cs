@@ -8,51 +8,39 @@ namespace CommunicationApi.Hubs
     {
         private readonly AppHubServices _service;
 
-        private readonly IDictionary<string, string> _dictionary;
-
         //AppHub Constructor 
-        public AppHub(IDictionary<string, string> dictionary, AppHubServices services)
+        public AppHub(AppHubServices services)
         {
-            _dictionary = dictionary;
             _service = services;
         }
 
-
-        // Adding the value to connection dictionary.
-        public Task AddUserToConnection(string UserId)
+        public async Task LogIn(string userId)
         {
-            _dictionary[Context.ConnectionId] = UserId;
-            return Task.CompletedTask;
+            await Groups.AddToGroupAsync(Context.ConnectionId, userId);
         }
 
-
         //Sending a message to another user. ReceiveMessage should be the method in Client.
-        public async Task SendMessage(Message message)
+        public async Task SendMessage(string content, string userId, string contactId)
         {
-            // Finding the sender and sending the message.
-            if (_dictionary.TryGetValue(Context.ConnectionId, out string? UserId))
-            {
-                if (message.UserId != null && message.ContactId != null)
-                {
-                    await Clients.Client(message.ContactId).SendAsync("ReceiveMessage", message);
-                }
-            }
+            if (content == null || userId == null || contactId == null) { return; }
+            Message message = new Message() { ContactId = contactId, Content = content, UserId = userId };
+            await Clients.Group(userId).SendAsync("ReceiveMessage", message);
         }
 
 
 
         // Current user add another user as his contact. Adding the new contact to the contact List.
-        public async Task AddContact(Contact contact)
-        {
-            // Finding the sender and sending the message.
-            if (contact.UserId != null && contact.Id != null)
-            {
-                if (_dictionary.TryGetValue(Context.ConnectionId, out string? UserId))
-                {
-                    await Clients.Client(contact.Id).SendAsync("ContactAdded", contact);
-                }
-            }
-        }
+        //public async Task AddContact(Contact contact)
+        //{
+        //    // Finding the sender and sending the message.
+        //    if (contact.UserId != null && contact.Id != null)
+        //    {
+        //        if (_dictionary.TryGetValue(Context.ConnectionId, out string? UserId))
+        //        {
+        //            await Clients.Client(contact.Id).SendAsync("ContactAdded", contact);
+        //        }
+        //    }
+        //}
     }
 }
 
