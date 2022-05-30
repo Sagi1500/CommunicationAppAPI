@@ -83,6 +83,20 @@ namespace CommunicationApi.Services
             return true;
         }
 
+        public async Task<bool> UpdateContact(Message message)
+        {
+
+            var contacts = await GetContact(message.UserId, message.ContactId);
+            if (contacts == null)
+            {
+                return false;
+            }
+            contacts.Last = message.Content;
+            contacts.Lastdate = message.Created;
+            _context.Contacts.Update(contacts);
+            await _context.SaveChangesAsync();
+            return true;
+        }
 
         public bool ContactExist(Contact contact)
         {

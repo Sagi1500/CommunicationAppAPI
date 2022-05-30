@@ -10,7 +10,7 @@ namespace Domain
         [Required]
         public string Content { get; set; }
 
-        public DateTime? Created { get; } = DateTime.Now;
+        public DateTime? Created { get; set; }
 
         [JsonIgnore]
         public Contact? Contact{ get; set; }

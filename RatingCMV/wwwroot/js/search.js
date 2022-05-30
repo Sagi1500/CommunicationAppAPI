@@ -15,7 +15,6 @@ $(function () {
 
         const response = await fetch('/Ratings/Search?query=' + q);
         const data = await response.json();
-        console.log(data);
 
         const template = $('#template').html();
         let results = '';
@@ -25,7 +24,7 @@ $(function () {
                 if (key === "time") {
                     data[item][key] = data[item][key].replaceAll("T", " ");
                 }
-                console.log('{' + key + '}', data[item][key]);
+                //console.log('{' + key + '}', data[item][key]);
                 row = row.replaceAll('{' + key + '}', data[item][key]);
                 row = row.replaceAll('%7B' + key + '%7D', data[item][key]);          
             }

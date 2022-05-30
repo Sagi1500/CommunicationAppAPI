@@ -12,12 +12,14 @@ namespace CommunicationApi.Controllers
 
         private readonly MessagesServices _messagesService;
         private readonly UsersServices _userService;
+        private readonly ContactsServices _contactsService;
 
         // Constructor.
-        public TransferController(MessagesServices messagesService, UsersServices usersServices)
+        public TransferController(MessagesServices messagesService, UsersServices usersServices,ContactsServices contactsServices)
         {
             _messagesService = messagesService;
             _userService = usersServices;
+            _contactsService = contactsServices;
         }
 
 
@@ -43,6 +45,13 @@ namespace CommunicationApi.Controllers
                 return BadRequest();
             }
 
+            // update the last message on database.
+            res = await _contactsService.UpdateContact(message);
+            if (res == false)
+            {
+                return BadRequest();
+            }
+            
             return Created("/api/Contacts/"+ transfer.From + "/Messages/",message);
         }
 
@@ -54,6 +63,7 @@ namespace CommunicationApi.Controllers
             newMessage.UserId = UserId;
             newMessage.Content = Content;
             newMessage.Sent = false;
+            newMessage.Created = DateTime.Now;
             return newMessage;
         }
 

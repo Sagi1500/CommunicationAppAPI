@@ -24,8 +24,4 @@
     <ProjectReference Include="..\RatingCMV\CommunicationAppApi.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

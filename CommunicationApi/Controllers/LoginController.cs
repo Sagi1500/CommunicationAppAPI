@@ -36,7 +36,7 @@ namespace CommunicationApi.Controllers
 
             // cheking if the password is correct and generate JWT token.
             if (res != null && res.Password == user.Password)
-            {
+            {       
                 var claims = new[] {
                   new Claim(JwtRegisteredClaimNames.Sub, _configuration["JWTParams:Subject"]),
                   new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),

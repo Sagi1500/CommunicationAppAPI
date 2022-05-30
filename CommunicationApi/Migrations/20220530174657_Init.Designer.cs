@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CommunicationApi.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20220525123441_Init")]
+    [Migration("20220530174657_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,6 +62,9 @@ namespace CommunicationApi.Migrations
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<bool?>("Sent")
                         .HasColumnType("tinyint(1)");

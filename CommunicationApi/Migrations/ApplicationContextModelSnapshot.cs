@@ -61,6 +61,9 @@ namespace CommunicationApi.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool?>("Sent")
                         .HasColumnType("tinyint(1)");
 

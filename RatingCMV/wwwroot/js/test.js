@@ -1,4 +1,5 @@
-﻿$(function (){
+﻿/*
+$(function () {
     var connection = new signalR.HubConnectionBuilder().withUrl("/myHub").build();
 
     connection.start();
@@ -12,3 +13,4 @@
         $('textarea').val(v);
     });
 });
+*/

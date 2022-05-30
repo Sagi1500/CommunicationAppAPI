@@ -17,8 +17,8 @@
 
 <form asp-action="Search" class="input-group input-group-md">
     <input class="col-9" name="query" id="search" aria-describedby="inputGroup-sizing-lg"/>
-    <input type="submit" value="Search" class="btn btn-secondary col-1" />
-    <a asp-action="Create" class="btn btn-success col-2"> Create Rating</a>
+    <input type="submit" value="Search" class="btn btn-info col-1" />
+    <a asp-action="Create" class="btn btn-primary col-2"> Create Rating</a>
 </form>
 
 
@@ -32,11 +32,14 @@
                 var currentIdReference = "#panelsStayOpen-" + (item.Id).ToString();
             }
             <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                <buttion class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target=@currentIdReference aria-expanded="false" aria-controls=@currentId>
-                    <strong>
-                        @Html.DisplayFor(modelItem => item.Name) rated this app @Html.DisplayFor(modelItem => item.Rate) out of 5.
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target=@currentIdReference aria-expanded="false" aria-controls=@currentId>
+                    <strong class="col-2 ">
+                        Name: @Html.DisplayFor(modelItem => item.Name)
                     </strong>
-                </buttion>
+                     <strong class="col-2 ">
+                        Rate:  @Html.DisplayFor(modelItem => item.Rate) out of 5.
+                    </strong>
+                </button>
             </h2>
             <div id=@currentId class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
                 <div class="accordion-body">

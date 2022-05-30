@@ -79,7 +79,7 @@ namespace CommunicationApi.Controllers
                     contact.UserId = userId;
 
                     // Adding contact to DB.
-                    if (contact.Id != contact.UserId && contact.Id != null && _userService.UserExists(contact.Id) )
+                    if (contact.Id != contact.UserId && contact.Id != null)
                     {
                         var res = await _contactService.AddNewContact(contact);
                         if (res == false)

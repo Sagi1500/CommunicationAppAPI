@@ -30,7 +30,7 @@ namespace CommunicationApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetContacts(String? id)
+        public async Task<IActionResult> GetMessages(String? id)
         {
             // Find the Id of the currently logged in user.
             var userId = GetLoggedInUser();
@@ -43,13 +43,6 @@ namespace CommunicationApi.Controllers
             if (id == null)
             {
                 return BadRequest();
-            }
-
-            // checking if user is exists.
-            var user = _userService.UserExists(id);
-            if (user == false)
-            {
-                return NotFound();
             }
 
             // checking for asking messages with himself.
@@ -87,13 +80,6 @@ namespace CommunicationApi.Controllers
                 return BadRequest();
             }
 
-            // checking if user is exists.
-            var user = _userService.UserExists(id);
-            if (user == false)
-            {
-                return NotFound();
-            }
-
             // checking for asking messages with himself.
             if (userId == id)
             {
@@ -104,6 +90,8 @@ namespace CommunicationApi.Controllers
             message.UserId = userId;
             message.ContactId = id;
             message.Sent = true;
+            message.Created = DateTime.Now;
+            
 
             // creating new message.
             var res = await _messagesService.CreateNewMessage(message);
@@ -111,6 +99,14 @@ namespace CommunicationApi.Controllers
             {
                 return NotFound();
             }
+
+            
+            res = await _contactsServices.UpdateContact(message);
+            if (res == false)
+            {
+                return NotFound();
+            }
+
             return Created("/api/Contacts/" + message.ContactId + "/Messages/", message);
         }
 
@@ -178,6 +174,7 @@ namespace CommunicationApi.Controllers
             message.Id = id2;
             message.ContactId = id;
             message.UserId = userId;
+            message.Created = DateTime.Now;
 
             // update the message in DB.
             var update = await _messagesService.EditMessage(message);
