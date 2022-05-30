@@ -7,7 +7,7 @@ namespace CommunicationApi.Hubs
     public class AppHub : Hub
     {
         private readonly AppHubServices _service;
-
+     
         //AppHub Constructor 
         public AppHub(AppHubServices services)
         {
@@ -17,6 +17,8 @@ namespace CommunicationApi.Hubs
         public async Task LogIn(string userId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, userId);
+        
+            
         }
 
         //Sending a message to another user. ReceiveMessage should be the method in Client.
@@ -24,9 +26,9 @@ namespace CommunicationApi.Hubs
         {
             if (content == null || userId == null || contactId == null) { return; }
             Message message = new Message() { ContactId = contactId, Content = content, UserId = userId, Sent=false };
-            await Clients.Group(contactId).SendAsync("ReceiveMessage", message);
+            await Clients.Group(contactId).SendAsync("ReceiveMessage", message, userId);
             Message message2 = new Message() { ContactId = contactId, Content = content, UserId = userId, Sent = true };
-            await Clients.Group(userId).SendAsync("ReceiveMessage", message2);
+            await Clients.Group(userId).SendAsync("ReceiveMessage",  message2,userId);
         }
 
         public async Task AddContact(string userId,string userServer,string id, string name, string server)

@@ -1,0 +1,43 @@
+#layout-container {
+    height: fit-content;
+    max-height: 100%;
+    width: 100%;
+    max-width: 100%;
+}
+
+.row {
+    margin: 0;
+}
+
+.col-sm-4, .col-sm-8 {
+    overflow-wrap: break-word;
+    flex-direction: column;
+    padding: 1%;
+    margin: 0;
+    border-bottom: 1px solid white;
+    text-align: left;
+}
+
+#Name, #Description {
+    width: 90%;
+}
+
+.form-group {
+    display: grid;
+    /*    justify-content: center;
+    text-align: center;
+    align-content: center;
+    justify-items: center;*/
+}
+
+.rate {
+    display: block;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-content: center;
+    justify-items: center;
+}

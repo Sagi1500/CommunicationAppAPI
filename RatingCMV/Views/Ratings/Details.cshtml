@@ -3,47 +3,50 @@
 @{
     ViewData["Title"] = "Details";
 }
-
+<link href="~/css/Ratings-Index.css" rel="stylesheet" type="text/css"/>
+<link href="~/css/Ratings.css" rel="stylesheet" type="text/css"/>
 <h1>Details</h1>
 
 <div>
     <h4>Rating number @Html.DisplayFor(model => model.Id) by  @Html.DisplayFor(model => model.Name)  </h4>
     <hr />
     <dl class="row">
-         <dt class = "col-sm-2">
+         <dt class = "col-sm-4">
             Serial number (@Html.DisplayNameFor(model => model.Id))
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-8">
             @Html.DisplayFor(model => model.Id)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class = "col-sm-4">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-8">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class = "col-sm-4">
             @Html.DisplayNameFor(model => model.Rate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-8">
             @Html.DisplayFor(model => model.Rate)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class = "col-sm-4">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-8">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class = "col-sm-4">
             @Html.DisplayNameFor(model => model.Time)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-8">
             @Html.DisplayFor(model => model.Time)
         </dd>
     </dl>
 </div>
-<div>
-    <br />
+<br />
+
+<div class="form-group button">
+    
     <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a>
     <a asp-action="Index" class="btn btn-info">Back to List</a>
 </div>
