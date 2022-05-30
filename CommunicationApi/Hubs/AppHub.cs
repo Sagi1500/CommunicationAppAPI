@@ -28,7 +28,7 @@ namespace CommunicationApi.Hubs
             Message message = new Message() { ContactId = contactId, Content = content, UserId = userId, Sent=false };
             await Clients.Group(contactId).SendAsync("ReceiveMessage", message, userId);
             Message message2 = new Message() { ContactId = contactId, Content = content, UserId = userId, Sent = true };
-            await Clients.Group(userId).SendAsync("ReceiveMessage",  message2,userId);
+            await Clients.Group(userId).SendAsync("ReceiveMessage",  message2,contactId);
         }
 
         public async Task AddContact(string userId,string userServer,string id, string name, string server)
