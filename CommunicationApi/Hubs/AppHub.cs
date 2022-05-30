@@ -23,24 +23,22 @@ namespace CommunicationApi.Hubs
         public async Task SendMessage(string content, string userId, string contactId)
         {
             if (content == null || userId == null || contactId == null) { return; }
-            Message message = new Message() { ContactId = contactId, Content = content, UserId = userId };
-            await Clients.Group(userId).SendAsync("ReceiveMessage", message);
+            Message message = new Message() { ContactId = contactId, Content = content, UserId = userId, Sent=false };
+            await Clients.Group(contactId).SendAsync("ReceiveMessage", message);
+            Message message2 = new Message() { ContactId = contactId, Content = content, UserId = userId, Sent = true };
+            await Clients.Group(userId).SendAsync("ReceiveMessage", message2);
         }
 
+        public async Task AddContact(string userId,string userServer,string id, string name, string server)
+        {
+            if (id == null || name == null || server == null) { return; }
+            Contact contact = new Contact() { Id = userId, Name=userId,Server=userServer};
+                await Clients.Group(id).SendAsync("ContactAdded", contact);
+            Contact contact2 = new Contact() { Id = id, Name = name, Server = server };
+            await Clients.Group(userId).SendAsync("ContactAdded", contact2);
 
 
-        // Current user add another user as his contact. Adding the new contact to the contact List.
-        //public async Task AddContact(Contact contact)
-        //{
-        //    // Finding the sender and sending the message.
-        //    if (contact.UserId != null && contact.Id != null)
-        //    {
-        //        if (_dictionary.TryGetValue(Context.ConnectionId, out string? UserId))
-        //        {
-        //            await Clients.Client(contact.Id).SendAsync("ContactAdded", contact);
-        //        }
-        //    }
-        //}
+        }
     }
 }
 
