@@ -26,7 +26,7 @@ namespace CommunicationApi.Controllers
         {
            
             Contact? contact = InitializeConteact(invitation.From, invitation.To, invitation.Server);
-            if (contact != null && invitation.To!= null && _usersServices.UserExists(invitation.To))
+            if (contact != null && invitation.To!= null && _usersServices.UserExists(invitation.To) && invitation.From!=invitation.To)
             {
                     
                 await _contactsServices.AddNewContact(contact);

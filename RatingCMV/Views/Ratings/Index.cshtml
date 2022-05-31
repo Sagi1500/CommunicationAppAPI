@@ -37,7 +37,7 @@
                         Name: @Html.DisplayFor(modelItem => item.Name)
                     </strong>
                      <strong class="col-2 ">
-                        Rate:  @Html.DisplayFor(modelItem => item.Rate) out of 5.
+                        Rate:  @Html.DisplayFor(modelItem => item.Rate) out of 5
                     </strong>
                 </button>
             </h2>
@@ -72,9 +72,12 @@
            }
             <h2 class="accordion-header" id="panelsStayOpen-headingThree">
              <buttion class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target=@currentIdReference aria-expanded="false" aria-controls=@currentId>
-                  <strong>
-                  {name} rated this app {rate} out of 5.
-                  </strong>
+                 <strong class="col-2 ">
+                        Name: {name}
+                    </strong>
+                     <strong class="col-2 ">
+                        Rate: {rate} out of 5
+                    </strong>
             </buttion>
         </h2>
        <div id=@currentId class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
