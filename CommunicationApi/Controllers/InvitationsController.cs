@@ -34,7 +34,6 @@ namespace CommunicationApi.Controllers
                 return Created("/api/Contacts",contact);
             }
             return BadRequest();
-
         }
 
         // The function recieves the invitation information and the logged in user and create contact.
