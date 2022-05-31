@@ -71,9 +71,9 @@ namespace CommunicationApi.Services
         }
 
 
-        public async Task<bool> DeleteContact (string UserId, string id)
+        public async Task<bool> DeleteContact (string UserId, string Id)
         {
-            var contacts =  await GetContact(UserId,id);
+            var contacts =  await GetContact(UserId, Id);
             if (contacts == null)
             {
                 return false;
@@ -82,6 +82,7 @@ namespace CommunicationApi.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
 
         public async Task<bool> UpdateContact(Message message)
         {

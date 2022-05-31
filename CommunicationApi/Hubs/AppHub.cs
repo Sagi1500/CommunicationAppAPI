@@ -25,9 +25,9 @@ namespace CommunicationApi.Hubs
         public async Task SendMessage(string content, string userId, string contactId)
         {
             if (content == null || userId == null || contactId == null) { return; }
-            Message message = new Message() { ContactId = contactId, Content = content, UserId = userId, Sent=false };
+            Message message = new Message() { ContactId = contactId, Content = content, UserId = userId, Sent=false, Created = DateTime.Now };
             await Clients.Group(contactId).SendAsync("ReceiveMessage", message, userId);
-            Message message2 = new Message() { ContactId = contactId, Content = content, UserId = userId, Sent = true };
+            Message message2 = new Message() { ContactId = contactId, Content = content, UserId = userId, Sent = true, Created = DateTime.Now};
             await Clients.Group(userId).SendAsync("ReceiveMessage",  message2,contactId);
         }
 

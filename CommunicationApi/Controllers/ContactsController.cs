@@ -11,12 +11,12 @@ namespace CommunicationApi.Controllers
     public class ContactsController : ControllerBase
     {
         private readonly ContactsServices _contactService;
-        private readonly UsersServices _userService;
+        private readonly MessagesServices _messagesService;
 
-        public ContactsController(ContactsServices contactService, UsersServices usersServices)
+        public ContactsController(ContactsServices contactService, MessagesServices messagesService)
         {
             _contactService = contactService;
-            _userService = usersServices;
+            _messagesService = messagesService;
         }
 
         [HttpGet]
@@ -144,8 +144,15 @@ namespace CommunicationApi.Controllers
                 return Unauthorized();
             }
 
+            // duplicate all messages with this foreign key in messages table.
+            var res = await _messagesService.RemoveAllMessages(userId, Id);
+            if (res == false)
+            {
+                return NoContent();
+            }
+
             //Delete contact from DB.
-            var res = await _contactService.DeleteContact(userId, Id);
+            res = await _contactService.DeleteContact(userId, Id);
             if (res == true)
             {
                 return NoContent();

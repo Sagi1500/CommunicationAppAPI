@@ -73,6 +73,20 @@ namespace CommunicationApi.Services
             return false;
         }
 
+        public async Task<bool> RemoveAllMessages(string UserId, string Id)
+        {
+            var messages = await GetAllMessages(Id, UserId);
+            if (messages != null) {
+                foreach (Message m in messages)
+                {
+                    _context.Messages.Remove(m);
+                }
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
         public async Task<bool> DeleteMessage(Message message)
         {
             if (message == null || _context.Messages == null)
