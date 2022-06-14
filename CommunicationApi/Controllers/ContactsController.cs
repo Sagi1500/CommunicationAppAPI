@@ -59,7 +59,7 @@ namespace CommunicationApi.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddContact([Bind("Id,Name,Server")] Contact contact)
+        public async Task<IActionResult> AddContact([FromBody] Contact contact)
         {
             if (ModelState.IsValid)
             {
