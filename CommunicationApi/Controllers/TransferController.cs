@@ -39,10 +39,7 @@ namespace CommunicationApi.Controllers
                     Credential = GoogleCredential.FromFile("private_key.json")
                 });
 
-                if (!_firebaseTokens.ContainsKey("a1"))
-                {
-                    _firebaseTokens.Add("a1", "f8Y5bZ2APZI:APA91bFT1eLsrRXWmRUAdbrgLdwTxY2QW7NXEoOu7jLHyUyk9J7XuIaifX5tm-J4JrcbPCD4-5XXFX86JSAgTD-MudyI3hjWK6pmke1kmS9EB7jBDHQnD26uwn0BFGPZXV6604whrzau");
-                }
+                _firebaseTokens = NotificationTokenServices.FirebaseTokens;
             }
         }
 
