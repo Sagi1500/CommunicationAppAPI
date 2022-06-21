@@ -18,14 +18,16 @@ namespace CommunicationApi.Controllers
             _firebaseTokens = NotificationTokenServices.FirebaseTokens;
         }
 
-        
-
-
         [HttpPost]
         public async Task<IActionResult> SaveToken ([FromBody]string Token) {
             var username = GetLoggedInUser();
             if (username != null)
             {
+                if (_firebaseTokens.ContainsKey(username))
+                {
+                    _firebaseTokens[username] = Token;
+                    return Ok();
+                }
                 _firebaseTokens.Add(username, Token);
             }
             return Ok();
@@ -37,7 +39,5 @@ namespace CommunicationApi.Controllers
             var userId = User.FindFirst("Id")?.Value;
             return userId;
         }
-
-
     }
 }
